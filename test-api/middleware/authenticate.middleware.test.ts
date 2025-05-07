@@ -4,11 +4,11 @@ const mockAdmin = {
   verifyIdToken: jest.fn(),
 };
 
-jest.mock('../../src/features/posts/services/jwt.service');
+jest.mock('../../src/features/users/services/jwt.service');
 
-import { Request, Response, NextFunction } from 'express';
+import e, { Request, Response, NextFunction } from 'express';
 import { authenticateJWT } from '../../src/features/middleware/authenticate.middleware';
-import { JwtService } from '../../src/features/posts/services/jwt.service';
+import { JwtService } from '../../src/features/users/services/jwt.service';
 import { UnauthorizedError } from '../../src/utils/errors/api-error';
 
 describe('Authentication Middleware', () => {
@@ -75,7 +75,7 @@ describe('Authentication Middleware', () => {
 
     it('should set user role to admin when token is valid with admin role', () => {
       mockRequest.headers = { authorization: 'Bearer validToken' };
-      const mockDecodedToken = { role: 'admin' };
+      const mockDecodedToken = { role: 'admin', email: 'example@ucr.ac.cr', uuid: '12345678' };
       
       (JwtService.prototype.verifyToken as jest.Mock).mockReturnValue(mockDecodedToken);
 
@@ -91,8 +91,8 @@ describe('Authentication Middleware', () => {
 
     it('should set user role to user when token is valid with non-admin role', () => {
       mockRequest.headers = { authorization: 'Bearer validToken' };
-      const mockDecodedToken = { role: 'user' };
-      
+      const mockDecodedToken = { role: 'user', email: 'example@ucr.ac.cr', uuid: '12345678' };
+
       (JwtService.prototype.verifyToken as jest.Mock).mockReturnValue(mockDecodedToken);
 
       authenticateJWT(

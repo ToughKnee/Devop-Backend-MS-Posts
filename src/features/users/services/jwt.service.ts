@@ -7,6 +7,8 @@ dotenv.config();
 
 interface Payload {
   role: string;
+  email: string;
+  uuid: string;
 }
 
 export class JwtService {
@@ -20,16 +22,16 @@ export class JwtService {
     this.secret = process.env.JWT_SECRET;
   }
 
-  public generateToken(payload: Payload): string {
-    return jwt.sign(payload, this.secret as string, { expiresIn: "1h" });
-  }
-
   public verifyToken(token: string): Payload {
     try {
       const decoded = jwt.verify(token, this.secret) as Payload;
       // Validate role is either 'user' or 'admin'
       if (decoded.role !== 'user' && decoded.role !== 'admin') {
         throw new UnauthorizedError('Invalid role in token');
+      }
+      // Validate email and uuid are present
+      if (!decoded.email || !decoded.uuid) {
+        throw new UnauthorizedError('Invalid token');
       }
       return decoded;
     } catch (error) {
