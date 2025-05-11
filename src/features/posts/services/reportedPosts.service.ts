@@ -1,17 +1,12 @@
 import {
   getReportedPostsPaginated,
   getReportedPostsCount,
-  ReportedPost
 } from '../repositories/reported.posts.repository';
-import {BadRequestError, InternalServerError} from '../../../utils/errors/api-error';
+import { ReportedPost } from '@/features/posts/interfaces/reportedPost.entities.interface';
+import { BadRequestError, InternalServerError } from '../../../utils/errors/api-error';
 
 /**
- * Fetches paginated posts for a user by their email.
- *
- * @param page - The page number to fetch.
- * @param limit - The number of posts per page.
- * @returns An object containing the posts and metadata (total posts, total pages, current page).
- * @throws InternalServerError if fetching posts fails.
+ * Response shape for paginated reported posts.
  */
 interface ReportedPostsResponse {
   message: string;
@@ -32,15 +27,15 @@ interface ReportedPostsResponse {
  *  - message: confirmation string,
  *  - posts: array of ReportedPost,
  *  - metadata: { totalPosts, totalPages, currentPage }.
- * @throws BadRequestError      If page or limit no son válidos.
- * @throws InternalServerError  Si ocurre cualquier error en la consulta.
+ * @throws BadRequestError      If page or limit are not valid positive integers.
+ * @throws InternalServerError  If an unexpected error occurs during fetching.
  */
 export const getReportedPosts = async (
     page: number,
     limit: number
 ): Promise<ReportedPostsResponse> => {
   if (page < 1 || limit < 1) {
-    throw new BadRequestError('page y limit deben ser números enteros positivos.');
+    throw new BadRequestError('Page and limit must be positive integers.');
   }
 
   try {
@@ -51,15 +46,10 @@ export const getReportedPosts = async (
 
     const postsOrMessage = await getReportedPostsPaginated(limit, offset);
 
-    let posts: ReportedPost[];
-    if (Array.isArray(postsOrMessage)) {
-      posts = postsOrMessage;
-    } else {
-      posts = [];
-    }
+    const posts = Array.isArray(postsOrMessage) ? postsOrMessage : [];
 
     return {
-      message: 'Posts fetched successfully',
+      message: 'Reported posts fetched successfully',
       posts,
       metadata: {
         totalPosts,
@@ -68,7 +58,7 @@ export const getReportedPosts = async (
       },
     };
   } catch (err) {
-    console.error('Error en getReportedPosts:', err);
-    throw new InternalServerError('Failed to fetch reported posts');
+    console.error('Error in getReportedPosts:', err);
+    throw new InternalServerError('Failed to fetch reported posts.');
   }
 };
