@@ -23,35 +23,49 @@ export interface ReportedPost {
  * Retrieves paginated reported posts.
  *
  */
-export const getReportedPostsPaginated = async (offset: number, limit: number) => {
-
-
-  /*
-  const userQuery = 'SELECT uuid FROM users WHERE email = $1';
-  const userResult: QueryResult = await client.query(userQuery, [email]);
-
-  if (userResult.rows.length === 0) {
-    return null; // User not found
-  }
-
-  const userUuid = userResult.rows[0].uuid;
-
-  // Fetching posts for the user
-  // LIMIT: Represents the maximum number of rows to return.
-  // OFFSET: Represents the number of rows to skip before starting to return rows from the query.
-  // Useful for pagination.
-  const postQuery = `
-    SELECT text, file_url, file_type, file_size, created_at FROM post 
-    WHERE uuid = $1 AND state = 'visible' 
-    ORDER BY created_at DESC 
-    LIMIT $2 OFFSET $3
+export const getReportedPostsPaginated = async (
+    limit: number,
+    offset: number
+): Promise<ReportedPost[] | { message: string }> => {
+    const paginatedQuery = `
+    SELECT
+      p.id,
+      p.content,
+      p.file_url,
+      p.media_type,
+      u.username,
+      u.email,
+      p.created_at,
+      p.status               AS post_status,
+      COALESCE(SUM(CASE WHEN r.status = $1 THEN 1 ELSE 0 END), 0) AS active_reports,
+      COUNT(r.id)                                AS total_reports
+    FROM posts p
+    JOIN users u
+      ON p.user_id = u.id
+    JOIN reports r
+      ON r.reported_content_id = p.id
+    GROUP BY
+      p.id,
+      p.content,
+      p.file_url,
+      p.media_type,
+      u.username,
+      u.email,
+      p.created_at,
+      p.status
+    ORDER BY p.created_at DESC
+    LIMIT $2
+    OFFSET $3;
   `;
 
-  const postResult: QueryResult = await client.query(postQuery, [userUuid, limit, offset]);
+    const values = [ACTIVE_REPORT_STATUS, limit, offset];
+    const result: QueryResult<ReportedPost> = await client.query(paginatedQuery, values);
 
-  return postResult.rows.length > 0 ? postResult.rows : [];
+    if (result.rows.length === 0) {
+        return { message: 'No hay publicaciones reportadas en este rango de páginas.' };
+    }
 
-   */
+    return result.rows;
 };
 
 
