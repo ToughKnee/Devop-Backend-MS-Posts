@@ -1,13 +1,13 @@
 import request from 'supertest';
 import express, { ErrorRequestHandler } from 'express';
-import { getUserPostsController } from '../../src/features/posts/controllers/userPosts.controller';
+import { getUserPostsController } from '../../src/features/posts/controllers/getPosts.controller';
 import { errorHandler } from '../../src/utils/errors/error-handler.middleware';
-import userPostsRoutes from '../../src/features/posts/routes/userPosts.routes';
+import userPostsRoutes from '../../src/features/posts/routes/post.routes';
 
-import * as userPostsService from '../../src/features/posts/services/userPosts.service';
+import * as userPostsService from '../../src/features/posts/services/getPosts.service';
 
 // Mock the service layer
-jest.mock('../../src/features/posts/services/userPosts.service');
+jest.mock('../../src/features/posts/services/getPosts.service');
 
 // Mock the authenticate middleware
 jest.mock('../../src/features/middleware/authenticate.middleware', () => {
@@ -39,7 +39,7 @@ describe('UserPosts Controller Integration Tests', () => {
     jest.clearAllMocks();
   });
 
-  describe('GET /posts/mine', () => {
+  describe('GET /api/user/posts/mine', () => {
     const mockPosts = {
       data: [
         {
@@ -63,7 +63,7 @@ describe('UserPosts Controller Integration Tests', () => {
       (userPostsService.getUserPosts as jest.Mock).mockResolvedValueOnce(mockPosts);
 
       const response = await request(app)
-        .get('/posts/mine')
+        .get('/user/posts/mine')
         .set('Authorization', 'Bearer valid-token')
         .query({ page: 1, limit: 10 })
         .send()
@@ -75,7 +75,7 @@ describe('UserPosts Controller Integration Tests', () => {
 
     it('should return 401 when the user is not authenticated', async () => {
       const response = await request(app)
-        .get('/posts/mine')
+        .get('/user/posts/mine')
         .query({ page: 1, limit: 10 })
         .expect(401);
 
@@ -86,7 +86,7 @@ describe('UserPosts Controller Integration Tests', () => {
 
     it('should return 400 for invalid query parameters', async () => {
       const response = await request(app)
-        .get('/posts/mine')
+        .get('/user/posts/mine')
         .set('Authorization', 'Bearer valid-token')
         .query({ page: 'invalid', limit: 'invalid' })
         .expect(400);

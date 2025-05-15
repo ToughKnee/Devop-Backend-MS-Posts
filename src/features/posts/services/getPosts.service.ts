@@ -1,4 +1,4 @@
-import { getTotalVisiblePostsByUserId, getVisiblePostsByUserIdPaginated } from '../repositories/user.posts.repository';
+import { getTotalVisiblePostsByUserId, getVisiblePostsByUserIdPaginated } from '../repositories/getPosts.repository';
 import { InternalServerError } from '../../../utils/errors/api-error';
 import { PaginatedResponse, BasePost } from '../interfaces/posts.entities.interface';
 

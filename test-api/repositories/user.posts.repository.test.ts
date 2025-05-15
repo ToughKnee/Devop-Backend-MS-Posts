@@ -1,4 +1,4 @@
-import { getVisiblePostsByUserIdPaginated, getTotalVisiblePostsByUserId } from '../../src/features/posts/repositories/user.posts.repository';
+import { getVisiblePostsByUserIdPaginated, getTotalVisiblePostsByUserId } from '../../src/features/posts/repositories/getPosts.repository';
 import { QueryResult } from 'pg';
 
 const mockClient = require('../../src/config/database');

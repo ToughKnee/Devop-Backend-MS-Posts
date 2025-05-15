@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, RequestHandler } from 'express';
-import { getUserPosts } from '../services/userPosts.service';
+import { getUserPosts } from '../services/getPosts.service';
 import * as yup from 'yup';
-import { AuthenticatedRequest } from '../../../features/middleware/authenticate.middleware';
+import { AuthenticatedRequest } from '../../middleware/authenticate.middleware';
 import { BadRequestError, UnauthorizedError } from '../../../utils/errors/api-error';
 import { getUserPostsSchema, GetUserPostsDTO } from '../dto/getUserPosts.dto';
 

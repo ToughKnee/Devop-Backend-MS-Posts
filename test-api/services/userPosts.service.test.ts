@@ -1,8 +1,8 @@
-import { getUserPosts } from '../../src/features/posts/services/userPosts.service';
-import * as userPostsRepository from '../../src/features/posts/repositories/user.posts.repository';
+import { getUserPosts } from '../../src/features/posts/services/getPosts.service';
+import * as userPostsRepository from '../../src/features/posts/repositories/getPosts.repository';
 import { InternalServerError } from '../../src/utils/errors/api-error';
 
-jest.mock('../../src/features/posts/repositories/user.posts.repository');
+jest.mock('../../src/features/posts/repositories/getPosts.repository');
 
 describe('UserPosts Service', () => {
   beforeEach(() => {
