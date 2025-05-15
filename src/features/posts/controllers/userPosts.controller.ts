@@ -5,6 +5,15 @@ import { AuthenticatedRequest } from '../../../features/middleware/authenticate.
 import { BadRequestError, UnauthorizedError } from '../../../utils/errors/api-error';
 import { getUserPostsSchema, GetUserPostsDTO } from '../dto/getUserPosts.dto';
 
+/**
+ * Controller to handle fetching paginated posts for the authenticated user.
+ *
+ * @param req - Express request object, extended with authenticated user info.
+ * @param res - Express response object.
+ * @param next - Express next middleware function for error handling.
+ * @returns Responds with paginated posts and metadata, or passes errors to the error handler.
+ * @throws BadRequestError if validation fails, UnauthorizedError if user is not authorized, or other errors from the service layer.
+ */
 export const getUserPostsController = async (
   req: AuthenticatedRequest,
   res: Response,

@@ -30,8 +30,6 @@ export const getUserPosts = async (user_id: string, page: number, limit: number)
       throw new InternalServerError('Failed to fetch posts');
     }
 
-    console.log('Posts:', data);
-
     return {
       message: 'Posts fetched successfully',
       data,
