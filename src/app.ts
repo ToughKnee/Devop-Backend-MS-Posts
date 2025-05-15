@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { errorHandler } from './utils/errors/error-handler.middleware';
 import cors from "cors";
+import postRoutes from './features/posts/routes/post.routes'; // Adjust the path if your routes file is elsewhere
 import userPostsRouter from './features/posts/routes/userPosts.routes';
 
 export const app = express();
@@ -11,7 +12,7 @@ app.get('/', (req, res) => {
 });
 app.use(express.json());
 app.use(cors());
-
+app.use('/api', postRoutes);
 // Add the user posts routes
 app.use('/api', userPostsRouter);
 
