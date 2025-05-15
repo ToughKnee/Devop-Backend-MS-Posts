@@ -21,6 +21,8 @@ WORKDIR /app
 # Copy only the necessary files from the builder stage
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/certs ./dist/certs
+
 
 EXPOSE 3006
 
