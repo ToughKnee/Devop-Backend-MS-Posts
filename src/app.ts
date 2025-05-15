@@ -12,6 +12,7 @@ app.get('/', (req, res) => {
 app.use(express.json());
 app.use(cors());
 app.use('/api', postRoutes);
+
 // Error handling middleware should be last
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     errorHandler(err, req, res, next);
